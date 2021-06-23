@@ -37,12 +37,16 @@ class Command:
             if issubclass(type(cmd), str):
                 layout.write(cmd)
             else:
-                kbd.send(cmd)
+                if isinstance(cmd, tuple):
+                    kbd.send(*cmd)
+                else:
+                    kbd.send(cmd)
 
 
 # Add commands for each button
 commands = [
-    Command(["test", Keycode.ENTER], (255, 0, 0), False, (123, 123, 123))
+    Command(["test", Keycode.ENTER], (255, 0, 0), False, (123, 123, 123)),
+    Command([(Keycode.LEFT_CONTROL, Keycode.LEFT_ARROW)], (0, 255, 0), True)
 ]
 
 while len(commands) < 16:
