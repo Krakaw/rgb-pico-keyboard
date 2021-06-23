@@ -46,7 +46,7 @@ class Command:
 # Add commands for each button
 commands = [
     Command(["test", Keycode.ENTER], (255, 0, 0), False, (123, 123, 123)),
-    Command([(Keycode.LEFT_CONTROL, Keycode.LEFT_ARROW)], (0, 255, 0), True)
+    Command([(Keycode.LEFT_CONTROL, Keycode.LEFT_SHIFT, Keycode.LEFT_GUI, Keycode.FOUR)], (0, 255, 0), True)
 ]
 
 while len(commands) < 16:
