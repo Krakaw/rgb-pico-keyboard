@@ -14,6 +14,10 @@ from lib.adafruit_hid.keycode import Keycode
 
 from digitalio import DigitalInOut, Direction
 
+# led = DigitalInOut(board.LED)
+# led.direction = Direction.OUTPUT
+# led.value = True
+
 cs = DigitalInOut(board.GP17)
 cs.direction = Direction.OUTPUT
 cs.value = 0
