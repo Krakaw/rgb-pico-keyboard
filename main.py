@@ -1,51 +1,30 @@
-# Adapted from https://gist.github.com/wildestpixel/6b684b8bc886392f7c4c57015fab3d97
-
 import time
 import board
 import busio
-import usb_hid
 
 from adafruit_bus_device.i2c_device import I2CDevice
-from lib import adafruit_dotstar
 
-from lib.adafruit_hid.keyboard import Keyboard
-from lib.adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
-from lib.adafruit_hid.keycode import Keycode
+from user_commands import init_user_commands
+from command import Command, pixels, num_pixels
 
-from digitalio import DigitalInOut, Direction
-
-# led = DigitalInOut(board.LED)
-# led.direction = Direction.OUTPUT
-# led.value = True
-
-cs = DigitalInOut(board.GP17)
-cs.direction = Direction.OUTPUT
-cs.value = 0
-num_pixels = 16
-pixels = adafruit_dotstar.DotStar(board.GP18, board.GP19, num_pixels, brightness=0.1, auto_write=True)
 i2c = busio.I2C(board.GP5, board.GP4)
 device = I2CDevice(i2c, 0x20)
-kbd = Keyboard(usb_hid.devices)
-layout = KeyboardLayoutUS(kbd)
 
 held = [0] * num_pixels
 
 
-def isalambda(v):
-    LAMBDA = lambda: 0
-    return isinstance(v, type(LAMBDA))
-
-
-def colourwheel(pos):
-    if pos < 0 or pos > 255:
-        return (0, 0, 0)
+def colourwheel(pos, offset=(0, 0, 0)):
+    pos = pos % 255
+    r = offset[0]
+    g = offset[1]
+    b = offset[2]
     if pos < 85:
-        return (255 - pos * 3, pos * 3, 0)
+        return ((255 - pos * 3) - r, (pos * 3) + g, 0 + b)
     if pos < 170:
         pos -= 85
-        return (0, 255 - pos * 3, pos * 3)
+        return (0 + r, (255 - pos * 3) - g, (pos * 3) + b)
     pos -= 170
-    return (pos * 3, 0, 255 - pos * 3)
+    return ((pos * 3) + r, 0 + g, (255 - pos * 3) - b)
 
 
 def find_pressed_index(x, y):
@@ -81,9 +60,11 @@ class Commands:
         i = 0
         if self.layer_count > 1 and Commands.layer_toggle_button > -1:
             for layer in self.commands:
-                layer[Commands.layer_toggle_button] = Command(command_list=[lambda: Commands.increment_layer()],
-                                                              color=colourwheel(i),
-                                                              default_color=colourwheel(i * num_pixels))
+                default_color = colourwheel(i * num_pixels, offset=(15, 15, 15))
+                layer[Commands.layer_toggle_button] = Command(
+                    command_list=[lambda pixels, kbd, cc: Commands.increment_layer()],
+                    color=colourwheel(i * num_pixels * 2),
+                    default_color=default_color)
                 i = i + 1
 
     def add_command(self, command, button, layer=0):
@@ -118,41 +99,15 @@ class Commands:
     def increment_layer():
         Commands.current_layer = (Commands.current_layer + 1) % Commands.layer_count
         commands.released()
-        time.sleep(0.5)
-
-
-class Command:
-    def __init__(self, command_list, color, repeat=False, default_color=(0, 0, 0)):
-        self.repeat = repeat
-        self.command_list = command_list
-        self.color = color
-        self.default_color = default_color
-
-    def process(self):
-        for cmd in self.command_list:
-            if isalambda(cmd):
-                cmd()
-            elif issubclass(type(cmd), str):
-                layout.write(cmd)
-            else:
-                if isinstance(cmd, tuple):
-                    kbd.send(*cmd)
-                else:
-                    kbd.send(cmd)
+        time.sleep(0.25)
 
 
 # ## Edit the commands
 # Initialize the commands class
 commands = Commands(layer_toggle_button=15, layer_count=2, use_layer_background=True)
 
-# Default layer 0
-commands.add_command(Command(["test", Keycode.ENTER], (255, 0, 0), False, (123, 123, 123)), 0)
-# Can execute a lambda
-commands.add_command(Command([lambda: print("Console print")], (122, 50, 0), False, (123, 0, 123)), 1)
-# Multiple keypresses at once on the second layer
-commands.add_command(
-    command=Command([(Keycode.LEFT_CONTROL, Keycode.LEFT_SHIFT, Keycode.LEFT_GUI, Keycode.FOUR)], (0, 255, 0), False,
-                    (0, 0, 255)), button=0, layer=1)
+init_user_commands(commands)
+
 # ## Stop editing here
 # Initialise the keypad
 commands.released()
