@@ -1,3 +1,4 @@
+import time
 from command import Command
 from lib.adafruit_hid.keycode import Keycode
 from lib.adafruit_hid.consumer_control_code import ConsumerControlCode
@@ -21,6 +22,12 @@ def init_user_commands(commands):
     commands.add_command(
         command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.Y)], (0, 122, 55), False,
                         (0, 50, 50)), button=13, layer=0)
+    commands.add_command(
+        command=Command([lambda pixels, kbd, cc: kbd.send(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.F5),
+                         lambda pixels, kbd, cc: time.sleep(2),
+                         lambda pixels, kbd, cc: kbd.send(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.F1)],
+                        (0, 122, 55), False,
+                        (50, 50, 0)), button=8, layer=0)
     # Default layer 0
     # commands.add_command(Command(["test", Keycode.ENTER], (255, 0, 0), False, (123, 123, 123)), 0)
     # Can execute a lambda
