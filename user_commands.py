@@ -23,6 +23,16 @@ def init_user_commands(commands):
         command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.MUTE)], (0, 255, 0), False,
                         (255, 255, 0)), button=2, layer=0)
 
+    # Volume Down
+    commands.add_command(
+        command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.VOLUME_DECREMENT)], (0, 0, 255), True,
+                        (0, 0, 0)), button=6, layer=0)
+
+    # Volume Up
+    commands.add_command(
+        command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.VOLUME_INCREMENT)], (255, 0, 0), True,
+                        (0, 0, 0)), button=7, layer=0)
+
     # Screenshot
     commands.add_command(
         command=Command(
