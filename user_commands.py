@@ -10,28 +10,36 @@ def init_user_commands(commands):
 
     # Set audio to headphones
     commands.add_command(
-        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.H)], (255, 255, 255), False,
-                        (0, 200, 0)), button=0, layer=0)
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.H)], (255, 255, 255),
+                        False,
+                        (0, 100, 0)), button=0, layer=0)
 
     # Set audio to monitor
     commands.add_command(
-        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.M)], (255, 255, 255), False,
-                        (0, 0, 200)), button=1, layer=0)
-
-    # Mute
-    commands.add_command(
-        command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.MUTE)], (0, 255, 0), False,
-                        (255, 255, 0)), button=2, layer=0)
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.M)], (255, 255, 255),
+                        False,
+                        (0, 100, 0)), button=1, layer=0)
 
     # Volume Down
     commands.add_command(
         command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.VOLUME_DECREMENT)], (0, 0, 255), True,
-                        (0, 0, 0)), button=6, layer=0)
+                        (50, 150, 0)), button=2, layer=0)
 
     # Volume Up
     commands.add_command(
         command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.VOLUME_INCREMENT)], (255, 0, 0), True,
-                        (0, 0, 0)), button=7, layer=0)
+                        (50, 200, 0)), button=3, layer=0)
+
+    # Mute
+    commands.add_command(
+        command=Command([lambda pixels, kbd, cc: cc.send(ConsumerControlCode.MUTE)], (0, 255, 0), False,
+                        (50, 100, 0)), button=6, layer=0)
+
+    # Push To Talk
+    commands.add_command(
+        command=Command(command_list=[(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.F1)],
+                        color=(0, 255, 0), repeat=True,
+                        default_color=(0, 25, 0), stay_pressed=True), button=7, layer=0)
 
     # Screenshot
     commands.add_command(
@@ -42,6 +50,13 @@ def init_user_commands(commands):
             default_color=(50, 50, 50)),
         button=4, layer=0
     )
+
+    # Open terminal
+    commands.add_command(
+        command=Command(
+            [lambda p, k, c: k.send(Keycode.LEFT_CONTROL, Keycode.GRAVE_ACCENT), lambda p, k, c: time.sleep(0.3)],
+            (255, 255, 0), True,
+            (50, 50, 0)), button=11, layer=0)
 
     # Minimize windows
     commands.add_command(

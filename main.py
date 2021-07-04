@@ -6,13 +6,16 @@ from adafruit_bus_device.i2c_device import I2CDevice
 from user_commands import init_user_commands
 from command import Command, pixels, num_pixels
 
-temperature_button = 3  # Set to -1 to disable
+temperature_button = -1  # Set to -1 to disable
 temp_aggregate = []
 
 i2c = busio.I2C(board.GP5, board.GP4)
 device = I2CDevice(i2c, 0x20)
 
+# Key currently being held down
 held = [0] * num_pixels
+# State of key if it has been toggled (allow for on/off states) only 1 key can be toggled at a time
+toggled_key = -1
 
 
 def relative_color(max_rgb=(255, 255, 255), direction=(1, 1, 1), min_max_values=(0, 100), value=0):
@@ -77,9 +80,9 @@ class Commands:
         for i in range(layer_count):
             self.commands.append([False] * num_pixels)
 
-        self.set_toggle_command()
+        self.set_toggle_layer_command()
 
-    def set_toggle_command(self):
+    def set_toggle_layer_command(self):
         i = 0
         if self.layer_count > 1 and Commands.layer_toggle_button > -1:
             for layer in self.commands:
@@ -93,17 +96,26 @@ class Commands:
     def add_command(self, command, button, layer=0):
         self.commands[layer][button] = command
 
-    def pressed(self, index):
+    def pressed(self, index, toggle=False):
+        global toggled_key
         if index < 0:
             return False
 
         command = self.commands[Commands.current_layer][index]
         if command:
-            if not held[pressed_index]:
-                pixels[pressed_index] = command.color
+            if command.stay_pressed and (toggle or toggled_key == -1):
+                if toggled_key != index:
+                    toggled_key = index
+                else:
+                    toggled_key = -1
+                    # Debounce multiple key presses
+                    time.sleep(0.3)
+
+            if not held[index]:
+                pixels[index] = command.color
                 command.process()
                 if not command.repeat:
-                    held[pressed_index] = 1
+                    held[index] = 1
             return True
         return False
 
@@ -139,7 +151,12 @@ commands.released()
 
 while True:
     pressed_index = find_pressed_index(0, num_pixels)
-    if not commands.pressed(pressed_index):
+    toggle = False
+    if toggled_key > -1:
+        toggle = pressed_index == toggled_key
+        pressed_index = toggled_key
+
+    if not commands.pressed(pressed_index, toggle):
         commands.released()
     time.sleep(0.1)  # Debounce
     if temperature_button > -1:

@@ -25,11 +25,12 @@ def isalambda(v):
 
 
 class Command:
-    def __init__(self, command_list, color, repeat=False, default_color=(0, 0, 0)):
+    def __init__(self, command_list, color, repeat=False, default_color=(0, 0, 0), stay_pressed=False):
         self.repeat = repeat
         self.command_list = command_list
         self.color = color
         self.default_color = default_color
+        self.stay_pressed = stay_pressed
 
     def process(self):
         for cmd in self.command_list:
