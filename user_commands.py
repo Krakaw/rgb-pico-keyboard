@@ -51,12 +51,58 @@ def init_user_commands(commands):
         button=4, layer=0
     )
 
+    # Move screen to corners
+    # Move screen to top
+    commands.add_command(
+        command=Command(
+            command_list=[(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.KEYPAD_EIGHT)],
+            color=(255, 255, 0),
+            repeat=False,
+            default_color=(255, 50, 0)),
+        button=5, layer=0
+    )
+
+    # Move screen to left
+    commands.add_command(
+        command=Command(
+            command_list=[(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.KEYPAD_FOUR)],
+            color=(255, 255, 0),
+            repeat=False,
+            default_color=(255, 50, 0)),
+        button=8, layer=0
+    )
+
+    # Move screen to bottom
+    commands.add_command(
+        command=Command(
+            command_list=[(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.KEYPAD_TWO)],
+            color=(255, 255, 0),
+            repeat=False,
+            default_color=(255, 50, 0)),
+        button=9, layer=0
+    )
+
+    # Move screen to right
+    commands.add_command(
+        command=Command(
+            command_list=[(Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.KEYPAD_SIX)],
+            color=(255, 255, 0),
+            repeat=False,
+            default_color=(255, 50, 0)),
+        button=10, layer=0
+    )
+
     # Open terminal
     commands.add_command(
         command=Command(
             [lambda p, k, c: k.send(Keycode.LEFT_CONTROL, Keycode.GRAVE_ACCENT), lambda p, k, c: time.sleep(0.3)],
             (255, 255, 0), True,
             (50, 50, 0)), button=11, layer=0)
+
+    # Raise windows
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.Z)], (0, 122, 55), False,
+                        (0, 50, 50)), button=13, layer=0)
 
     # Minimize windows
     commands.add_command(
