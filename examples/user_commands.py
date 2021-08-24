@@ -117,6 +117,6 @@ def init_user_commands(commands):
                         (0, 122, 55), False,
                         (50, 50, 0)), button=12, layer=0)
     # Default layer 0
-    # commands.add_command(command=Command(["test"], (255, 0, 0), False, (123, 123, 123)), layer=1, button=0)
+    commands.add_command(command=Command([Keycode.F12], (255, 0, 0), True, (123, 123, 123)), layer=1, button=0)
     # Can execute a lambda
     # commands.add_command(Command([lambda: print("Console print")], (122, 50, 0), False, (123, 0, 123)), 1)
