@@ -118,5 +118,41 @@ def init_user_commands(commands):
                         (50, 50, 0)), button=12, layer=0)
     # Default layer 0
     commands.add_command(command=Command([Keycode.F12], (255, 0, 0), True, (123, 123, 123)), layer=1, button=0)
+
+    # OBS Keyboard Shortcuts
+    # Start / Stop Recording
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.S)],
+                        (250, 0, 0), False,
+                        (0, 200, 0)), button=4, layer=1)
+
+    # Pause / Unpause Recording
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.P)],
+                        (0, 0, 0), False,
+                        (50, 50, 0)), button=5, layer=1)
+
+    # All screens and audio
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.ONE)],
+                        (0, 0, 0), False,
+                        (0, 250, 0)), button=8, layer=1)
+    # Primary screen
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.TWO)],
+                        (0, 0, 0), False,
+                        (0, 175, 0)), button=9, layer=1)
+
+    # Secondary screen
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.THREE)],
+                        (0, 0, 0), False,
+                        (0, 100, 0)), button=10, layer=1)
+
+    # Audio Only
+    commands.add_command(
+        command=Command([(Keycode.LEFT_SHIFT, Keycode.LEFT_CONTROL, Keycode.LEFT_ALT, Keycode.LEFT_GUI, Keycode.FOUR)],
+                        (0, 0, 0), False,
+                        (0, 50, 0)), button=11, layer=1)
     # Can execute a lambda
     # commands.add_command(Command([lambda: print("Console print")], (122, 50, 0), False, (123, 0, 123)), 1)
